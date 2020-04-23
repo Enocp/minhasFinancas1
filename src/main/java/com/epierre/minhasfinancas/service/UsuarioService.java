@@ -1,5 +1,7 @@
 package com.epierre.minhasfinancas.service;
 
+import java.util.Optional;
+
 import com.epierre.minhasfinancas.model.entity.Usuario;
 
 public interface UsuarioService {
@@ -10,5 +12,7 @@ public interface UsuarioService {
 	
 	void validarEmail(String email);
 	
+	Optional <Usuario> obterPorId(Long id);
+
 
 }

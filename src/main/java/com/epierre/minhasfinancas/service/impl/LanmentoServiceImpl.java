@@ -3,6 +3,7 @@ package com.epierre.minhasfinancas.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -23,7 +24,6 @@ public class LanmentoServiceImpl implements LancamentoService {
 
 	public LanmentoServiceImpl(LancamentoRepository repository) {
 		this.repository = repository;
-
 	}
 
 	@Override
@@ -52,43 +52,51 @@ public class LanmentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Lancamento> buscar(Lancamento lancamentoFiltro) {
-		Example exeample = Example.of(lancamentoFiltro,
-				ExampleMatcher.matching().withIgnoreCase().withStringMatcher(StringMatcher.CONTAINING));
-		return null;
+		Example example = Example.of( lancamentoFiltro, 
+				ExampleMatcher.matching()
+					.withIgnoreCase()
+					.withStringMatcher(StringMatcher.CONTAINING) );
+
+		return repository.findAll(example);
 	}
 
 	@Override
 	public void atualizarStatus(Lancamento lancamento, StatusLancamento status) {
 		lancamento.setStatus(status);
 		atualizar(lancamento);
-
 	}
 
 	@Override
 	public void validar(Lancamento lancamento) {
-		if(lancamento.getDescricao()== null || lancamento.getDescricao().trim().equals("")) {
-			throw new RegraNegocioException("Informe uma Descricao valida. ");
+
+		if(lancamento.getDescricao() == null || lancamento.getDescricao().trim().equals("")) {
+			throw new RegraNegocioException("Informe uma Descrição válida.");
 		}
-		
+
 		if(lancamento.getMes() == null || lancamento.getMes() < 1 || lancamento.getMes() > 12) {
-			throw new RegraNegocioException("Informe um Mes valida. ");
+			throw new RegraNegocioException("Informe um Mês válido.");
 		}
-		
-		if(lancamento.getAno() == null || lancamento.getAno().toString().length() !=4) {
-			throw new RegraNegocioException("Informe um Ano Valida. ");
+
+		if(lancamento.getAno() == null || lancamento.getAno().toString().length() != 4 ) {
+			throw new RegraNegocioException("Informe um Ano válido.");
 		}
-		
-		if(lancamento.getUsuario() == null || lancamento.getUsuario().getId() == 9900) {
-			throw new RegraNegocioException("Informe um Usuario. ");
+
+		if(lancamento.getUsuario() == null || lancamento.getUsuario().getId() == null) {
+			throw new RegraNegocioException("Informe um Usuário.");
 		}
-		
-		if(lancamento.getValor() == null || lancamento.getValor().compareTo(BigDecimal.ZERO) < 1) {
-			throw new RegraNegocioException("Informe um Valor valida. ");
+
+		if(lancamento.getValor() == null || lancamento.getValor().compareTo(BigDecimal.ZERO) < 1 ) {
+			throw new RegraNegocioException("Informe um Valor válido.");
 		}
-		
+
 		if(lancamento.getTipo() == null) {
-			throw new RegraNegocioException("Informe um tipo de Lancamento. ");
+			throw new RegraNegocioException("Informe um tipo de Lançamento.");
 		}
+	}
+
+	@Override
+	public Optional<Lancamento> obterPorId(Long id) {
+		return repository.findById(id);
 	}
 
 }
