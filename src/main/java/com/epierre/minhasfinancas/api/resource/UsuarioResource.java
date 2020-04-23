@@ -54,20 +54,17 @@ public class UsuarioResource {
 		}
 	}
 
+
 	@GetMapping("{id}/saldo")
-	public ResponseEntity atualizar(@PathVariable("id") Long id) {
+	public ResponseEntity obterSaldo( @PathVariable("id") Long id ) {
 		Optional<Usuario> usuario = service.obterPorId(id);
-		
+
 		if(!usuario.isPresent()) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-			
+			return new ResponseEntity( HttpStatus.NOT_FOUND );
 		}
-		BigDecimal saldo =lancamentoService.obterSaldoPorUsuario(id);
-		
+
+		BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);
 		return ResponseEntity.ok(saldo);
-		
-		
 	}
-	
 
 }
