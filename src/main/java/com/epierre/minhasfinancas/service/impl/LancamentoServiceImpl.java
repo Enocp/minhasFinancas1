@@ -19,11 +19,11 @@ import com.epierre.minhasfinancas.model.repository.LancamentoRepository;
 import com.epierre.minhasfinancas.service.LancamentoService;
 
 @Service
-public class LanmentoServiceImpl implements LancamentoService {
+public class LancamentoServiceImpl implements LancamentoService {
 
 	private LancamentoRepository repository;
 
-	public LanmentoServiceImpl(LancamentoRepository repository) {
+	public LancamentoServiceImpl(LancamentoRepository repository) {
 		this.repository = repository;
 	}
 
