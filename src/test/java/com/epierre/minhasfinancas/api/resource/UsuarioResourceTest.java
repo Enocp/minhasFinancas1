@@ -68,6 +68,34 @@ public class UsuarioResourceTest {
 
 	}
 	
+
+	@Test
+	public void deveCriarUmNovoUsuario() throws Exception {
+		//cenario
+				String email = "usuario@email.com";
+				String senha = "123";
+
+				UsuarioDTO dto = UsuarioDTO.builder().email("usuario@email.com").senha("123").build();
+				Usuario usuario = Usuario.builder().id(1l).email(email).senha(senha).build();
+
+				Mockito.when( service.salvarUsuario(Mockito.any(Usuario.class)) ).thenReturn(usuario);
+				String json = new ObjectMapper().writeValueAsString(dto);
+
+				//execucao e verificacao
+				MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+															.post( API  )
+															.accept( JSON )
+															.contentType( JSON )
+															.content(json);
+				mvc
+					.perform(request)
+					.andExpect( MockMvcResultMatchers.status().isCreated())
+					.andExpect( MockMvcResultMatchers.jsonPath("id").value(usuario.getId()))
+					.andExpect( MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome()))
+					.andExpect( MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()));
+				
+	}
+	
 	@Test
 	public void deveRetornarBadRequestAoTentarCriarUmUsuarioInvalido() throws Exception {
 		//cenario
